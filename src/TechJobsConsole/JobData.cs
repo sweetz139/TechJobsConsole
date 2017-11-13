@@ -2,6 +2,7 @@
 using System.IO;
 using System.Reflection;
 using System.Text;
+using static System.String;
 
 namespace TechJobsConsole
 {
@@ -49,7 +50,7 @@ namespace TechJobsConsole
             {
                 string aValue = row[column];
 
-                if (aValue.Contains(value))
+                if (aValue.ToLower().Contains(value.ToLower()))
                 {
                     jobs.Add(row);
                 }
@@ -138,5 +139,36 @@ namespace TechJobsConsole
 
             return rowValues.ToArray();
         }
+        public static List<Dictionary<string,string>> FindByValue(string value)
+         {
+           LoadData();
+           List<Dictionary<string, string>> searched_result = new List<Dictionary<string, string>>();
+            //Adds Jobs searched under all to List of dictionaries searched_results
+            for (int i = 0; i < AllJobs.Count; i++)
+            {
+                foreach (KeyValuePair<string, string> specific_search in AllJobs[i])
+                {
+                    if ((specific_search.Key.ToLower().Contains(value.ToLower()) || 
+                        specific_search.Value.ToLower().Contains(value.ToLower()))) 
+                    {
+                        searched_result.Add(AllJobs[i]);
+                            
+                    }
+                }
+            }
+            //Removes duplicate job postings from searched_results
+            for(int k =0; k<searched_result.Count;k++)
+            {
+                for(int m = 1; m < searched_result.Count; m++)
+                {
+                    if(searched_result[k] == searched_result[m])
+                    {
+                        searched_result.Remove(searched_result[m]);
+                    }
+                }
+            }
+            
+            return searched_result;
+         }
     }
 }
